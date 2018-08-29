@@ -3,8 +3,10 @@
 /*Bottom, u can see sample usage of header file*/
 #include <string>
 #include <iostream>
+#include <iomanip>
 #include <chrono>
 #include<map>
+
 
 class TimerElement
 {
@@ -39,7 +41,9 @@ public:
 		std::chrono::duration<float> time_interval = stop_time - start_time;
 		//float t = std::chrono::duration_cast<std::chrono::milliseconds>(time_interval).count();
 		float t = 1000*time_interval.count();
-		std::cout << "Single run time for : " << name << " = " << t << " milli sec" << std::endl;
+#if 0
+		std::cout << "Single run time for : " << name << " = " << t << " milli sec" << std::endl; 
+#endif
 		total_time += t;
 		call_count++; //increment after every call
 	}
@@ -61,7 +65,7 @@ public:
 class TimeProfiler
 {
 	std::map< std::string, TimerElement> timer_dic;
-	std::map< std::string, TimerElement> it;
+	std::map< std::string, TimerElement>::iterator it;
 
 	void createNewTimer(std::string name)
 	{
@@ -76,13 +80,13 @@ public:
 	{
 	}
 
-	void start_timer(std::string name)
+	void start(std::string name)
 	{
 		createNewTimer(name);
 		timer_dic[name].start();
 	}
 
-	void stop_timer(std::string name)
+	void stop(std::string name)
 	{
 		if (timer_dic.count(name) == 1)
 			timer_dic[name].stop();
@@ -142,6 +146,27 @@ public:
 		return (NAN);
 	}
 
+	void get_all_average_times()
+	{
+
+		std::cout << "All timer elements-----------------start" << std::endl;
+		for (it = timer_dic.begin(); it != timer_dic.end(); it++)
+		{
+			std::cout << std::setw(25)
+				<< it->first
+				<< ": Call count = "
+				<< std::setfill(' ') << std::setw(3)
+				<< it->second.get_call_count()
+				<< ": Total time = "
+				<< std::setfill(' ') << std::setw(5)
+				<< it->second.get_total_time()
+				<< ", Average run time = "
+				<< it->second.get_total_time()/ it->second.get_call_count()   // string's value 
+				<< std::endl;
+		}
+		std::cout << "All timer elements-----------------end" << std::endl;
+	}
+
 };
 #endif // !TIMEPROFILER__H
 
@@ -152,18 +177,19 @@ public:
 //{
 //	TimeProfiler timer;
 //
-//	timer.start_timer("imread");
+//	timer.start("imread");
 //	Mat im1 = imread("filename.png");
-//	timer.stop_timer("imread");
+//	timer.stop("imread");
 //
-//	timer.start_timer("imread");
+//	timer.start("imread");
 //	Mat im2 = imread("1_new.png");
-//	timer.stop_timer("imread");
+//	timer.stop("imread");
 //
 //
 //	timer.get_total_time("imread");
 //  timer.get_call_count("imread");
 //  timer.get_average_time("imread");
+//  timer.get_all_average_times();
 //}
 //#################################################################################################################
 
