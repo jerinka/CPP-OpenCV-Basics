@@ -37,7 +37,8 @@ public:
 	{
 		stop_time = std::chrono::steady_clock::now();
 		std::chrono::duration<float> time_interval = stop_time - start_time;
-		float t = std::chrono::duration_cast<std::chrono::milliseconds>(time_interval).count();
+		//float t = std::chrono::duration_cast<std::chrono::milliseconds>(time_interval).count();
+		float t = 1000*time_interval.count();
 		std::cout << "Single run time for : " << name << " = " << t << " milli sec" << std::endl;
 		total_time += t;
 		call_count++; //increment after every call
@@ -94,7 +95,7 @@ public:
 		if (timer_dic.count(name) == 1)
 		{
 			float t = timer_dic[name].get_total_time();
-			std::cout << "Total  run time for : " << name << " = " << t << " sec" << std::endl;
+			std::cout << "Total  run time for : " << name << " = " << t << " milli sec" << std::endl;
 			return (t);
 		}
 		else
@@ -107,7 +108,7 @@ public:
 		if (timer_dic.count(name) == 1)
 		{
 			int call_count = timer_dic[name].get_call_count();
-			std::cout << "Call count of timer : " << name << " = " << call_count << " sec" << std::endl;
+			std::cout << "Call count of timer : " << name << " = " << call_count << " milli sec" << std::endl;
 			return call_count;
 		}
 		else
@@ -127,7 +128,7 @@ public:
 			float average_time = total_time / call_count;
 			if (call_count > 0)
 			{
-				std::cout << "Average  run time for : " << name << " = " << average_time << " sec" << std::endl;
+				std::cout << "Average  run time for : " << name << " = " << average_time << " milli sec" << std::endl;
 				return average_time;
 			}
 			else
